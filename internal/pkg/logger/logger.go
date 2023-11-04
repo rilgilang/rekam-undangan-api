@@ -5,28 +5,6 @@ import (
 	"os"
 )
 
-func init() {
-	// Log as JSON instead of the default ASCII formatter.
-	log.SetFormatter(&log.JSONFormatter{})
-
-	// Output to stdout instead of the default stderr
-	// Can be any io.Writer, see below for File example
-	log.SetOutput(os.Stdout)
-
-	// Only log the warning severity or above.
-	log.SetLevel(log.WarnLevel)
-}
-
-//log.Trace("Something very low level.")
-//log.Debug("Useful debugging information.")
-//log.Info("Something noteworthy happened!")
-//log.Warn("You should probably take a look at this.")
-//log.Error("Something failed but I'm not quitting.")
-//// Calls os.Exit(1) after logging
-//log.Fatal("Bye.")
-//// Calls panic() after logging
-//log.Panic("I'm bailing.")
-
 type LoggerLevel interface {
 	Debug(message string)
 	Info(message string)
@@ -37,39 +15,50 @@ type LoggerLevel interface {
 }
 
 type logger struct {
-	logs *log.Entry
+	log *log.Entry
 }
 
 func NewLog(eventName string) LoggerLevel {
-	logs := log.WithFields(log.Fields{
+
+	// Log as JSON instead of the default ASCII formatter.
+	log.SetFormatter(&log.JSONFormatter{})
+
+	// Output to stdout instead of the default stderr
+	// Can be any io.Writer, see below for File example
+	log.SetOutput(os.Stdout)
+
+	// Only log the warning severity or above.
+	//log.SetLevel(log.WarnLevel)
+
+	l := log.WithFields(log.Fields{
 		"event_name": eventName,
 	})
 
 	return &logger{
-		logs: logs,
+		log: l,
 	}
 }
 
 func (l *logger) Debug(message string) {
-	l.Debug(message)
+	l.log.WithFields(log.Fields{"message": message}).Debug()
 }
 
 func (l *logger) Info(message string) {
-	l.Info(message)
+	l.log.WithFields(log.Fields{"message": message}).Info()
 }
 
 func (l *logger) Warn(message string) {
-	l.Warn(message)
+	l.log.WithFields(log.Fields{"message": message}).Warn()
 }
 
 func (l *logger) Error(message string) {
-	l.Error(message)
+	l.log.WithFields(log.Fields{"message": message}).Error()
 }
 
 func (l *logger) Fatal(message string) {
-	l.Fatal(message)
+	l.log.WithFields(log.Fields{"message": message}).Fatal()
 }
 
 func (l *logger) Panic(message string) {
-	l.Panic(message)
+	l.log.WithFields(log.Fields{"message": message}).Panic()
 }
