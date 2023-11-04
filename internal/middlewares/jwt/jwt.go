@@ -5,7 +5,9 @@ import (
 	"digital_sekuriti_indonesia/internal/api/presenter"
 	"digital_sekuriti_indonesia/internal/consts"
 	"digital_sekuriti_indonesia/internal/entities"
+	"digital_sekuriti_indonesia/internal/pkg/logger"
 	"digital_sekuriti_indonesia/internal/repositories"
+	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/pkg/errors"
@@ -65,13 +67,16 @@ func (m *authMiddlewares) GenerateToken(user *entities.User) (*string, error) {
 
 func (m *authMiddlewares) ValidateToken() fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		jwtKey := m.cfg.JWT.Key
-		authorization := strings.Split(c.GetReqHeaders()["Authorization"], "Bearer ")
+		var (
+			jwtKey        = m.cfg.JWT.Key
+			authorization = strings.Split(c.GetReqHeaders()["Authorization"], "Bearer ")
+			log           = logger.NewLog("jwt_middleware_generate_token")
+		)
 
 		if len(authorization) != 2 {
+			log.Error("authorization token not valid")
 			c.Status(400)
 			return c.JSON(presenter.ErrorResponse(errors.New("token not valid!")))
-
 		}
 
 		token := authorization[1]
@@ -88,6 +93,7 @@ func (m *authMiddlewares) ValidateToken() fiber.Handler {
 		})
 
 		if err != nil {
+			log.Error(fmt.Sprintf(`authorization failed got %s`, err))
 			if err == jwt.ErrSignatureInvalid {
 				c.Status(401)
 				return c.JSON(presenter.ErrorResponse(err))
@@ -96,6 +102,7 @@ func (m *authMiddlewares) ValidateToken() fiber.Handler {
 			return c.JSON(presenter.ErrorResponse(err))
 		}
 		if !tkn.Valid {
+			log.Error("authorization failed token invalid")
 			c.Status(401)
 			return c.JSON(presenter.ErrorResponse(err))
 		}

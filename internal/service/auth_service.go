@@ -72,15 +72,22 @@ func (s *authService) Login(ctx context.Context, user *entities.User) *presenter
 	return response.WithCode(200).WithData(data)
 }
 func (s *authService) GetProfile(ctx context.Context, userId string) *presenter.Response {
-	response := presenter.Response{}
+	var (
+		log      = logger.NewLog("login_handler")
+		response = presenter.Response{}
+	)
+
+	log.Info("fetching user data from db")
 
 	userData, err := s.userRepo.FindOneById(ctx, userId)
 
 	if err != nil {
+		log.Error(fmt.Sprintf(`error fetching user data to db got %s`, err))
 		return response.WithCode(500).WithError(errors.New("something went wrong!"))
 	}
 
 	if userData == nil {
+		log.Warn("user not found in db")
 		return response.WithCode(401).WithError(errors.New("user not found"))
 	}
 
