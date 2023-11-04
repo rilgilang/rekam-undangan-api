@@ -25,7 +25,7 @@ type authMiddlewares struct {
 
 type Claims struct {
 	ID    string `json:"id"`
-	Email string `json:"username"`
+	Email string `json:"email"`
 	jwt.RegisteredClaims
 }
 
@@ -41,7 +41,7 @@ func (m *authMiddlewares) GenerateToken(user *entities.User) (*string, error) {
 	expireMinute := m.cfg.JWT.ExpiredMinute
 	// Declare the expiration time of the token
 	expirationTime := time.Now().Add(time.Duration(expireMinute) * time.Minute)
-	// Create the JWT claims, which includes the username and expiry time
+	// Create the JWT claims, which includes the email and expiry time
 	claims := &Claims{
 		ID:    user.ID,
 		Email: user.Email,

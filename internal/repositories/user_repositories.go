@@ -9,6 +9,7 @@ import (
 
 type UserRepository interface {
 	FindOneByEmail(ctx context.Context, email string) (*entities.User, error)
+	FindOneById(ctx context.Context, id string) (*entities.User, error)
 }
 
 type userRepository struct {
@@ -24,6 +25,20 @@ func NewUserRepo(db *gorm.DB) UserRepository {
 func (r *userRepository) FindOneByEmail(ctx context.Context, email string) (*entities.User, error) {
 	user := entities.User{}
 	err := r.db.WithContext(ctx).Where("email", email).First(&user).Error
+
+	if err != nil {
+		if err.Error() == consts.SqlNoRow {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+func (r *userRepository) FindOneById(ctx context.Context, id string) (*entities.User, error) {
+	user := entities.User{}
+	err := r.db.WithContext(ctx).Where("id", id).First(&user).Error
 
 	if err != nil {
 		if err.Error() == consts.SqlNoRow {

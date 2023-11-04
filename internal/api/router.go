@@ -47,7 +47,7 @@ func NewRouter(cfg *yaml.Config) *fiber.App {
 		return c.Send([]byte("uwow"))
 	})
 
-	routes.AuthRouter(api, authService)
+	routes.AuthRouter(api, authMidleware, authService)
 
 	//routes.HealthRouter(api)
 
