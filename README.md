@@ -18,7 +18,7 @@ Make sure you have mysql for running this app
 Since im not providing endpoint for register you'll need to insert the user 
 in your local mysql, simply run this command
 
-    INSERT INTO
+    INSERT INTO dsi_technical.users (id, created_at, updated_at, deleted_at, email, full_name, age, mobile_number, password) VALUES('bf506362-4e81-43d0-8238-d377bc8dab80', now(), now(), NULL, 'iniemail@gmail.com', 'ini full name', 99, '081234567890', '$2a$10$wZIYJUPjmOYvI8aTie7Qd.Sw11X169/0yo0k17NnCIrEXFgDl38Pi');
 
 we'll use this account for login
 
