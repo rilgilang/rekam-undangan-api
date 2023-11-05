@@ -125,3 +125,17 @@ The actual source files of this project are stored inside the
     │   ├── repositories        # Database interactor
     │   └── service             # Business Logic of the endpoints
     └── ...
+
+# Database Schema
+
+| Column name   | Data Type    | Not Null | Key |
+|---------------|--------------|----------|-----|
+| id            | Varchar(35)  | ✅        | PK  |
+| email         | Varchar(255) | ✅        |     |
+| full_name     | Varchar(255) | ✅        |     |
+| password      | Varchar(255) | ✅        |     |
+| age           | Int(2)       | ✅        |     |
+| mobile_number | Varchar(13)  | ✅        |     |
+| created_at    | Timestamp    | ✅        |     |
+| updated_at    | Timestamp    | ✅        |     |
+| deleted_at    | Timestamp    |          |     |
