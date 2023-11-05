@@ -1,0 +1,41 @@
+version: "3"
+
+services:
+  backend:
+    build:
+      context: ../
+      dockerfile: ./deployment/Dockerfile
+    working_dir: /go/src/digital_sekuriti_indonesia
+    container_name: backend
+    hostname: backend
+    networks:
+      - code-network
+    volumes:
+      - ../config/yaml:/go/src/digital_sekuriti_indonesia/config/yaml
+    ports:
+      - 8081:8081
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql/mysql-server:8.0
+    restart: always
+    container_name: dsi_mysql
+    hostname: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=eucRvgVdaJMfY4G9R5KPwZ3V5g6pm8DP
+      - MYSQL_ROOT_HOST=%
+    volumes:
+      - ../config/mysql:/var/lib/mysql
+    ports:
+      - 3307:3306
+    networks:
+      - code-network
+
+volumes:
+  mysql:
+    driver: local
+
+networks:
+  code-network:
+    driver: bridge

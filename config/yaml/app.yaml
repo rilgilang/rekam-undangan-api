@@ -4,11 +4,11 @@ app:
 
 db:
   dialect: mysql
-  host: localhost
-  port: 3306
+  host: host.docker.internal
+  port: 3307
   db_name: dsi_technical # database name
   username: root # database user
-  password: # database password
+  password: eucRvgVdaJMfY4G9R5KPwZ3V5g6pm8DP # database password
 
 jwt:
   key: uwoww_sangad
