@@ -60,6 +60,8 @@ There are 2 endpoint in this app
 
 ### Request
 
+you need to generate the bearer token from endpoint **`Login`**
+
 `GET /api/profile`
 
     curl -i -H 'Accept: application/json' -H 'Authorization: Bearer {{Token}}'  http://localhost:{{port}}/api/profile
