@@ -70,7 +70,7 @@ func (m *authMiddlewares) ValidateToken() fiber.Handler {
 		var (
 			jwtKey        = m.cfg.JWT.Key
 			authorization = strings.Split(c.GetReqHeaders()["Authorization"], "Bearer ")
-			log           = logger.NewLog("jwt_middleware_generate_token")
+			log           = logger.NewLog("jwt_middleware_generate_token", m.cfg.Logger.Enable)
 		)
 
 		if len(authorization) != 2 {
