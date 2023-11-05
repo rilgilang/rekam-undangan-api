@@ -29,7 +29,7 @@ func NewLog(eventName string, enable bool) LoggerLevel {
 	log.SetOutput(os.Stdout)
 
 	// Only log the warning severity or above.
-	//log.SetLevel(log.WarnLevel)
+	log.SetLevel(log.WarnLevel)
 
 	l := log.WithFields(log.Fields{
 		"event_name": eventName,
