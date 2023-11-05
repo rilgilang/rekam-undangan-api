@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"digital_sekuriti_indonesia/config/yaml"
 	"digital_sekuriti_indonesia/internal/api/presenter"
 	"digital_sekuriti_indonesia/internal/entities"
 	"digital_sekuriti_indonesia/internal/pkg/logger"
@@ -11,13 +12,13 @@ import (
 	"net/http"
 )
 
-func Login(service service.AuthService) fiber.Handler {
+func Login(cfg *yaml.Config, service service.AuthService) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 
 		var (
 			requestBody = entities.User{}
 			ctx         = c.Context()
-			log         = logger.NewLog("login_handler")
+			log         = logger.NewLog("login_handler", cfg.Logger.Enable)
 		)
 
 		err := c.BodyParser(&requestBody)

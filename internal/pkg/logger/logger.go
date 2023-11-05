@@ -15,10 +15,11 @@ type LoggerLevel interface {
 }
 
 type logger struct {
-	log *log.Entry
+	enable bool
+	log    *log.Entry
 }
 
-func NewLog(eventName string) LoggerLevel {
+func NewLog(eventName string, enable bool) LoggerLevel {
 
 	// Log as JSON instead of the default ASCII formatter.
 	log.SetFormatter(&log.JSONFormatter{})
@@ -35,30 +36,43 @@ func NewLog(eventName string) LoggerLevel {
 	})
 
 	return &logger{
-		log: l,
+		log:    l,
+		enable: enable,
 	}
 }
 
 func (l *logger) Debug(message string) {
-	l.log.WithFields(log.Fields{"message": message}).Debug()
+	if l.enable == true {
+		l.log.WithFields(log.Fields{"message": message}).Debug()
+	}
 }
 
 func (l *logger) Info(message string) {
-	l.log.WithFields(log.Fields{"message": message}).Info()
+	if l.enable == true {
+		l.log.WithFields(log.Fields{"message": message}).Info()
+	}
 }
 
 func (l *logger) Warn(message string) {
-	l.log.WithFields(log.Fields{"message": message}).Warn()
+	if l.enable == true {
+		l.log.WithFields(log.Fields{"message": message}).Warn()
+	}
 }
 
 func (l *logger) Error(message string) {
-	l.log.WithFields(log.Fields{"message": message}).Error()
+	if l.enable == true {
+		l.log.WithFields(log.Fields{"message": message}).Error()
+	}
 }
 
 func (l *logger) Fatal(message string) {
-	l.log.WithFields(log.Fields{"message": message}).Fatal()
+	if l.enable == true {
+		l.log.WithFields(log.Fields{"message": message}).Fatal()
+	}
 }
 
 func (l *logger) Panic(message string) {
-	l.log.WithFields(log.Fields{"message": message}).Panic()
+	if l.enable == true {
+		l.log.WithFields(log.Fields{"message": message}).Panic()
+	}
 }

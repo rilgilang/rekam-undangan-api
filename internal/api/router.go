@@ -37,7 +37,7 @@ func NewRouter(cfg *yaml.Config) *fiber.App {
 
 	//service
 	var (
-		authService = service.NewAuthService(authMidleware, userRepo)
+		authService = service.NewAuthService(authMidleware, userRepo, cfg)
 	)
 
 	//group
@@ -47,7 +47,7 @@ func NewRouter(cfg *yaml.Config) *fiber.App {
 		return c.Send([]byte("uwow"))
 	})
 
-	routes.AuthRouter(api, authMidleware, authService)
+	routes.AuthRouter(api, cfg, authMidleware, authService)
 
 	//routes.HealthRouter(api)
 

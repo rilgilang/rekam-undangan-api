@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"digital_sekuriti_indonesia/config/yaml"
 	"digital_sekuriti_indonesia/internal/api/dto"
 	"digital_sekuriti_indonesia/internal/api/presenter"
 	"digital_sekuriti_indonesia/internal/entities"
@@ -22,19 +23,21 @@ type AuthService interface {
 type authService struct {
 	jwtMdwr  jwt.AuthMiddleware
 	userRepo repositories.UserRepository
+	cfg      *yaml.Config
 }
 
-func NewAuthService(jwtMdwr jwt.AuthMiddleware, userRepo repositories.UserRepository) AuthService {
+func NewAuthService(jwtMdwr jwt.AuthMiddleware, userRepo repositories.UserRepository, cfg *yaml.Config) AuthService {
 	return &authService{
 		jwtMdwr:  jwtMdwr,
 		userRepo: userRepo,
+		cfg:      cfg,
 	}
 }
 
 func (s *authService) Login(ctx context.Context, user *entities.User) *presenter.Response {
 	var (
 		response = presenter.Response{}
-		log      = logger.NewLog("login_service")
+		log      = logger.NewLog("login_service", s.cfg.Logger.Enable)
 	)
 
 	log.Info("fetching user data from db")
@@ -73,7 +76,7 @@ func (s *authService) Login(ctx context.Context, user *entities.User) *presenter
 }
 func (s *authService) GetProfile(ctx context.Context, userId string) *presenter.Response {
 	var (
-		log      = logger.NewLog("login_handler")
+		log      = logger.NewLog("login_handler", s.cfg.Logger.Enable)
 		response = presenter.Response{}
 	)
 

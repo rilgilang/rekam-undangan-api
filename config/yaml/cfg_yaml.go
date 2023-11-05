@@ -6,9 +6,10 @@ import (
 )
 
 type Config struct {
-	App App `yaml:"app,omitempty" json:"app"`
-	DB  DB  `yaml:"db" json:"db"`
-	JWT JWT `yaml:"jwt" json:"jwt"`
+	App    App    `yaml:"app,omitempty" json:"app"`
+	DB     DB     `yaml:"db" json:"db"`
+	JWT    JWT    `yaml:"jwt" json:"jwt"`
+	Logger Logger `yaml:"logger" json:"logger"`
 }
 
 type App struct {
@@ -35,6 +36,10 @@ type DB struct {
 type JWT struct {
 	Key           string `yaml:"key" json:"key"`
 	ExpiredMinute int    `yaml:"expired_minute" json:"expired_minute"`
+}
+
+type Logger struct {
+	Enable bool `yaml:"enable" json:"enable"`
 }
 
 func NewConfig() (*Config, error) {

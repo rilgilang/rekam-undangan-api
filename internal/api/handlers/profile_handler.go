@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"digital_sekuriti_indonesia/config/yaml"
 	"digital_sekuriti_indonesia/internal/api/presenter"
 	"digital_sekuriti_indonesia/internal/consts"
 	"digital_sekuriti_indonesia/internal/helper"
@@ -9,12 +10,12 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func GetProfile(service service.AuthService) fiber.Handler {
+func GetProfile(cfg *yaml.Config, service service.AuthService) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 
 		var (
 			ctx = c.Context()
-			log = logger.NewLog("get_profile_handler")
+			log = logger.NewLog("get_profile_handler", cfg.Logger.Enable)
 		)
 
 		//log.Info(fmt.Sprintf(`start service login for user %s`, requestBody.Email))

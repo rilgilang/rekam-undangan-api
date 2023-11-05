@@ -13,3 +13,6 @@ db:
 jwt:
   key: uwoww_sangad
   expired_minute: 30
+
+logger:
+  enable: false
