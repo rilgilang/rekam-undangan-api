@@ -8,7 +8,6 @@ import (
 	"github.com/rilgilang/sticker-collection-api/internal/service"
 )
 
-func AuthRouter(app fiber.Router, cfg *dotenv.Config, authMiddleware jwt.AuthMiddleware, service service.AuthService) {
-	app.Post("/login", handlers.Login(cfg, service))
-	app.Get("/profile", authMiddleware.ValidateToken(), handlers.GetProfile(cfg, service))
+func StickerRoutes(app fiber.Router, cfg *dotenv.Config, authMiddleware jwt.AuthMiddleware, service service.StickerService) {
+	app.Get("/sticker", handlers.Stickers(cfg, service))
 }

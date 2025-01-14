@@ -1,14 +1,14 @@
 app:
-  name: dsi-technical-test
-  port: 8083
+  name: sticker-collection
+  port: 8081
 
 db:
-  dialect: mysql
+  dialect: postgres
   host: host.docker.internal
-  port: 3307
-  db_name: dsi_technical # database name
-  username: root # database user
-  password: eucRvgVdaJMfY4G9R5KPwZ3V5g6pm8DP # database password
+  port: 5432
+  db_name: sticker-collection # database name
+  username: admin # database user
+  password: admin # database password
 
 jwt:
   key: uwoww_sangad

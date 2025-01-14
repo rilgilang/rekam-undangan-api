@@ -1,24 +1,24 @@
 package handlers
 
 import (
-	"digital_sekuriti_indonesia/config/yaml"
-	"digital_sekuriti_indonesia/internal/api/presenter"
-	"digital_sekuriti_indonesia/internal/entities"
-	"digital_sekuriti_indonesia/internal/pkg/logger"
-	"digital_sekuriti_indonesia/internal/service"
 	"fmt"
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/gofiber/fiber/v2"
+	"github.com/rilgilang/sticker-collection-api/config/dotenv"
+	"github.com/rilgilang/sticker-collection-api/internal/api/presenter"
+	"github.com/rilgilang/sticker-collection-api/internal/entities"
+	"github.com/rilgilang/sticker-collection-api/internal/pkg/logger"
+	"github.com/rilgilang/sticker-collection-api/internal/service"
 	"net/http"
 )
 
-func Login(cfg *yaml.Config, service service.AuthService) fiber.Handler {
+func Login(cfg *dotenv.Config, service service.AuthService) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 
 		var (
 			requestBody = entities.User{}
 			ctx         = c.Context()
-			log         = logger.NewLog("login_handler", cfg.Logger.Enable)
+			log         = logger.NewLog("login_handler", cfg.LoggerEnable)
 		)
 
 		err := c.BodyParser(&requestBody)

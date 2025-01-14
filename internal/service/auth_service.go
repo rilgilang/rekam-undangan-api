@@ -2,15 +2,15 @@ package service
 
 import (
 	"context"
-	"digital_sekuriti_indonesia/config/yaml"
-	"digital_sekuriti_indonesia/internal/api/dto"
-	"digital_sekuriti_indonesia/internal/api/presenter"
-	"digital_sekuriti_indonesia/internal/entities"
-	"digital_sekuriti_indonesia/internal/middlewares/jwt"
-	"digital_sekuriti_indonesia/internal/pkg/logger"
-	"digital_sekuriti_indonesia/internal/repositories"
 	"fmt"
 	"github.com/pkg/errors"
+	"github.com/rilgilang/sticker-collection-api/config/dotenv"
+	"github.com/rilgilang/sticker-collection-api/internal/api/dto"
+	"github.com/rilgilang/sticker-collection-api/internal/api/presenter"
+	"github.com/rilgilang/sticker-collection-api/internal/entities"
+	"github.com/rilgilang/sticker-collection-api/internal/middlewares/jwt"
+	"github.com/rilgilang/sticker-collection-api/internal/pkg/logger"
+	"github.com/rilgilang/sticker-collection-api/internal/repositories"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -23,10 +23,10 @@ type AuthService interface {
 type authService struct {
 	jwtMdwr  jwt.AuthMiddleware
 	userRepo repositories.UserRepository
-	cfg      *yaml.Config
+	cfg      *dotenv.Config
 }
 
-func NewAuthService(jwtMdwr jwt.AuthMiddleware, userRepo repositories.UserRepository, cfg *yaml.Config) AuthService {
+func NewAuthService(jwtMdwr jwt.AuthMiddleware, userRepo repositories.UserRepository, cfg *dotenv.Config) AuthService {
 	return &authService{
 		jwtMdwr:  jwtMdwr,
 		userRepo: userRepo,
@@ -37,7 +37,7 @@ func NewAuthService(jwtMdwr jwt.AuthMiddleware, userRepo repositories.UserReposi
 func (s *authService) Login(ctx context.Context, user *entities.User) *presenter.Response {
 	var (
 		response = presenter.Response{}
-		log      = logger.NewLog("login_service", s.cfg.Logger.Enable)
+		log      = logger.NewLog("login_service", s.cfg.LoggerEnable)
 	)
 
 	log.Info("fetching user data from db")
@@ -76,7 +76,7 @@ func (s *authService) Login(ctx context.Context, user *entities.User) *presenter
 }
 func (s *authService) GetProfile(ctx context.Context, userId string) *presenter.Response {
 	var (
-		log      = logger.NewLog("login_handler", s.cfg.Logger.Enable)
+		log      = logger.NewLog("login_handler", s.cfg.LoggerEnable)
 		response = presenter.Response{}
 	)
 

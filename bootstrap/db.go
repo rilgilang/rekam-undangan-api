@@ -1,17 +1,23 @@
 package bootstrap
 
 import (
-	"digital_sekuriti_indonesia/config/yaml"
 	"fmt"
-	"gorm.io/driver/mysql"
+	"github.com/rilgilang/sticker-collection-api/config/dotenv"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 // simple db connection
-func DatabaseConnection(config *yaml.Config) (*gorm.DB, error) {
-	// refer https://github.com/go-sql-driver/mysql#dsn-data-source-name for details
-	dsn := fmt.Sprintf(`%s:%s@tcp(%v:%v)/%v?charset=utf8mb4&parseTime=True&loc=Local`, config.DB.Username, config.DB.Password, config.DB.Host, config.DB.Port, config.DB.DbName)
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+func DatabaseConnection(config *dotenv.Config) (*gorm.DB, error) {
+	dsn := fmt.Sprintf(
+		`host=%s user=%s password=%s dbname=%s port=%v sslmode=disable TimeZone=Asia/Jakarta`,
+		config.DBHost,
+		config.DBUsername,
+		config.DBPassword,
+		config.DBName,
+		config.DBPort,
+	)
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
 		return nil, err

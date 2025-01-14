@@ -5,35 +5,33 @@ services:
     build:
       context: ../
       dockerfile: ./deployment/Dockerfile
-    working_dir: /go/src/digital_sekuriti_indonesia
+    working_dir: /go/src/github.com/rilgilang/sticker-collection-api
     container_name: backend
     hostname: backend
     networks:
       - code-network
     volumes:
-      - ../config/yaml:/go/src/digital_sekuriti_indonesia/config/yaml
+      - ../config/yaml:/go/src/github.com/rilgilang/sticker-collection-api/config/yaml
     ports:
       - 8081:8081
     depends_on:
-      - mysql
+      - postgres
 
-  mysql:
-    image: mysql/mysql-server:8.0
-    restart: always
-    container_name: dsi_mysql
-    hostname: mysql
+  postgres:
+    image: postgres:17.2
     environment:
-      - MYSQL_ROOT_PASSWORD=eucRvgVdaJMfY4G9R5KPwZ3V5g6pm8DP
-      - MYSQL_ROOT_HOST=%
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "admin"
+      POSTGRES_DB: "sticker-collection"
     volumes:
-      - ../config/mysql:/var/lib/mysql
+      - ../config/postgresql:/var/lib/postgres
     ports:
-      - 3307:3306
+      - "5432:5432"
     networks:
       - code-network
 
 volumes:
-  mysql:
+  postgres:
     driver: local
 
 networks:

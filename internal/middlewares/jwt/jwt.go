@@ -1,17 +1,17 @@
 package jwt // Service is an interface from which our api module can access our repository of all our models
 
 import (
-	"digital_sekuriti_indonesia/config/yaml"
-	"digital_sekuriti_indonesia/internal/api/presenter"
-	"digital_sekuriti_indonesia/internal/consts"
-	"digital_sekuriti_indonesia/internal/entities"
-	"digital_sekuriti_indonesia/internal/pkg/logger"
-	"digital_sekuriti_indonesia/internal/repositories"
+	"errors"
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/pkg/errors"
-	"strings"
+	"github.com/rilgilang/sticker-collection-api/config/dotenv"
+	"github.com/rilgilang/sticker-collection-api/internal/api/presenter"
+	"github.com/rilgilang/sticker-collection-api/internal/consts"
+	"github.com/rilgilang/sticker-collection-api/internal/entities"
+	"github.com/rilgilang/sticker-collection-api/internal/pkg/logger"
+	"github.com/rilgilang/sticker-collection-api/internal/repositories"
+	"strconv"
 	"time"
 )
 
@@ -22,7 +22,7 @@ type AuthMiddleware interface {
 
 type authMiddlewares struct {
 	userRepo repositories.UserRepository
-	cfg      *yaml.Config
+	cfg      *dotenv.Config
 }
 
 type Claims struct {
@@ -31,7 +31,7 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-func NewAuthMiddleware(userRepo repositories.UserRepository, cfg *yaml.Config) AuthMiddleware {
+func NewAuthMiddleware(userRepo repositories.UserRepository, cfg *dotenv.Config) AuthMiddleware {
 	return &authMiddlewares{
 		userRepo: userRepo,
 		cfg:      cfg,
@@ -39,8 +39,8 @@ func NewAuthMiddleware(userRepo repositories.UserRepository, cfg *yaml.Config) A
 }
 
 func (m *authMiddlewares) GenerateToken(user *entities.User) (*string, error) {
-	jwtKey := m.cfg.JWT.Key
-	expireMinute := m.cfg.JWT.ExpiredMinute
+	jwtKey := m.cfg.JWTKey
+	expireMinute := m.cfg.JWTExpiredMin
 	// Declare the expiration time of the token
 	expirationTime := time.Now().Add(time.Duration(expireMinute) * time.Minute)
 	// Create the JWT claims, which includes the email and expiry time
@@ -67,10 +67,11 @@ func (m *authMiddlewares) GenerateToken(user *entities.User) (*string, error) {
 
 func (m *authMiddlewares) ValidateToken() fiber.Handler {
 	return func(c *fiber.Ctx) error {
+
 		var (
-			jwtKey        = m.cfg.JWT.Key
-			authorization = strings.Split(c.GetReqHeaders()["Authorization"], "Bearer ")
-			log           = logger.NewLog("jwt_middleware_generate_token", m.cfg.Logger.Enable)
+			jwtKey        = m.cfg.JWTKey
+			authorization = ""
+			log           = logger.NewLog("jwt_middleware_generate_token", m.cfg.LoggerEnable)
 		)
 
 		if len(authorization) != 2 {
@@ -88,7 +89,7 @@ func (m *authMiddlewares) ValidateToken() fiber.Handler {
 		// Note that we are passing the key in this method as well. This method will return an error
 		// if the token is invalid (if it has expired according to the expiry time we set on sign in),
 		// or if the signature does not match
-		tkn, err := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (interface{}, error) {
+		tkn, err := jwt.ParseWithClaims(strconv.Itoa(int(token)), claims, func(token *jwt.Token) (interface{}, error) {
 			return []byte(jwtKey), nil
 		})
 

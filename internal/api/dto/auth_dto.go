@@ -1,6 +1,6 @@
 package dto
 
-import "digital_sekuriti_indonesia/internal/entities"
+import "github.com/rilgilang/sticker-collection-api/internal/entities"
 
 // User is the presenter object which will be passed in the response by Handler
 type User struct {

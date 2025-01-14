@@ -1,35 +1,36 @@
 package main
 
 import (
-	"digital_sekuriti_indonesia/config/yaml"
-	"digital_sekuriti_indonesia/internal/api"
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/rilgilang/sticker-collection-api/config/dotenv"
+	"github.com/rilgilang/sticker-collection-api/internal/api"
 
 	"log"
 )
 
 func main() {
 
-	cfg, err := yaml.NewConfig()
+	//cfg, err := yaml.NewConfig()
+	//if err != nil {
+	//	log.Fatal(fmt.Sprintf(`read cfg yaml got error : %v`, err))
+	//}
+
+	cfg, err := dotenv.NewLoadConfig()
 	if err != nil {
-		log.Fatal(fmt.Sprintf(`read cfg yaml got error : %v`, err))
+		log.Fatal(fmt.Sprintf(`read cfg .env got error : %v`, err))
 	}
 
 	app := fiber.New()
 	app.Use(cors.New())
 
-	// Or extend your config for customization
 	app.Use(cors.New(cors.Config{
-		AllowHeaders:     "Origin,Content-Type,Accept,Content-Length,Accept-Language,Accept-Encoding,Connection,Access-Control-Allow-Origin",
-		AllowOrigins:     "*",
-		AllowCredentials: true,
-		AllowMethods:     "GET,POST",
-		MaxAge:           3,
+		AllowOrigins: "*",
+		AllowMethods: "GET, POST",
 	}))
 
 	app = api.NewRouter(cfg)
 
-	log.Fatal(app.Listen(fmt.Sprintf(`:%s`, cfg.App.Port)))
+	log.Fatal(app.Listen(fmt.Sprintf(`:%v`, cfg.AppPort)))
 }

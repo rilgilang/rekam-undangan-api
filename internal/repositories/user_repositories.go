@@ -2,8 +2,8 @@ package repositories
 
 import (
 	"context"
-	"digital_sekuriti_indonesia/internal/consts"
-	"digital_sekuriti_indonesia/internal/entities"
+	"github.com/rilgilang/sticker-collection-api/internal/consts"
+	"github.com/rilgilang/sticker-collection-api/internal/entities"
 	"gorm.io/gorm"
 )
 

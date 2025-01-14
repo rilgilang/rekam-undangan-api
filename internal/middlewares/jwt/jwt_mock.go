@@ -1,10 +1,10 @@
 package jwt
 
 import (
-	"digital_sekuriti_indonesia/internal/entities"
 	"errors"
 	"fmt"
 	"github.com/gofiber/fiber/v2"
+	"github.com/rilgilang/sticker-collection-api/internal/entities"
 	"github.com/stretchr/testify/mock"
 )
 

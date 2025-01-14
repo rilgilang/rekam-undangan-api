@@ -2,8 +2,8 @@ package repositories
 
 import (
 	"context"
-	"digital_sekuriti_indonesia/internal/entities"
 	"errors"
+	"github.com/rilgilang/sticker-collection-api/internal/entities"
 	"github.com/stretchr/testify/mock"
 )
 

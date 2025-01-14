@@ -2,10 +2,10 @@ package service
 
 import (
 	"context"
-	"digital_sekuriti_indonesia/config/yaml"
-	"digital_sekuriti_indonesia/internal/entities"
-	"digital_sekuriti_indonesia/internal/middlewares/jwt"
-	"digital_sekuriti_indonesia/internal/repositories"
+	"github.com/rilgilang/sticker-collection-api/config/dotenv"
+	"github.com/rilgilang/sticker-collection-api/internal/entities"
+	"github.com/rilgilang/sticker-collection-api/internal/middlewares/jwt"
+	"github.com/rilgilang/sticker-collection-api/internal/repositories"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"testing"
@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	cfg            = &yaml.Config{}
+	cfg            = &dotenv.Config{}
 	userRepository = repositories.UserRepositoryMock{Mock: mock.Mock{}}
 	//mdwr           = jwt.JWTMock{Mock: mock.Mock{}}
 	jwtMiddleware = jwt.NewAuthMiddleware(&userRepository, cfg)
@@ -21,7 +21,7 @@ var (
 )
 
 func TestMain(m *testing.M) {
-	cfg, _ = yaml.NewConfig()
+	cfg, _ = dotenv.NewLoadConfig()
 
 	m.Run()
 }

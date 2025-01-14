@@ -1,18 +1,18 @@
 package api
 
 import (
-	"digital_sekuriti_indonesia/bootstrap"
-	"digital_sekuriti_indonesia/config/yaml"
-	"digital_sekuriti_indonesia/internal/api/routes"
-	"digital_sekuriti_indonesia/internal/middlewares/jwt"
-	"digital_sekuriti_indonesia/internal/repositories"
-	"digital_sekuriti_indonesia/internal/service"
-	"digital_sekuriti_indonesia/migrations"
 	"fmt"
 	"github.com/gofiber/fiber/v2"
+	"github.com/rilgilang/sticker-collection-api/bootstrap"
+	"github.com/rilgilang/sticker-collection-api/config/dotenv"
+	"github.com/rilgilang/sticker-collection-api/internal/api/routes"
+	"github.com/rilgilang/sticker-collection-api/internal/middlewares/jwt"
+	"github.com/rilgilang/sticker-collection-api/internal/repositories"
+	"github.com/rilgilang/sticker-collection-api/internal/service"
+	"github.com/rilgilang/sticker-collection-api/migrations"
 )
 
-func NewRouter(cfg *yaml.Config) *fiber.App {
+func NewRouter(cfg *dotenv.Config) *fiber.App {
 	router := fiber.New()
 
 	db, err := bootstrap.DatabaseConnection(cfg)
@@ -27,7 +27,8 @@ func NewRouter(cfg *yaml.Config) *fiber.App {
 
 	//repositories
 	var (
-		userRepo = repositories.NewUserRepo(db)
+		userRepo    = repositories.NewUserRepo(db)
+		stickerRepo = repositories.NewStickerRepo(db)
 	)
 
 	//middlewares
@@ -35,9 +36,10 @@ func NewRouter(cfg *yaml.Config) *fiber.App {
 		authMidleware = jwt.NewAuthMiddleware(userRepo, cfg)
 	)
 
-	//service
+	//service~
 	var (
-		authService = service.NewAuthService(authMidleware, userRepo, cfg)
+		authService    = service.NewAuthService(authMidleware, userRepo, cfg)
+		stickerService = service.NewStickerService(stickerRepo, cfg)
 	)
 
 	//group
@@ -48,6 +50,7 @@ func NewRouter(cfg *yaml.Config) *fiber.App {
 	})
 
 	routes.AuthRouter(api, cfg, authMidleware, authService)
+	routes.StickerRoutes(api, cfg, authMidleware, stickerService)
 
 	//routes.HealthRouter(api)
 
