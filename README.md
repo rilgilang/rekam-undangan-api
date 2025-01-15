@@ -1,7 +1,7 @@
 Simple Stickers API
 ============================
 
-A simple REST API that returns a random sticker that i've got from internet and saved to db  
+A simple REST API that returns a link of random meme sticker that i've got from internet and saved to db  
 
 This app is build with [Go Fiber](https://gofiber.io/) as the framework
 
