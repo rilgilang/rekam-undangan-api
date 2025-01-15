@@ -35,7 +35,7 @@ func (s *stickerService) GetOneRandomSticker(ctx context.Context, tag []string) 
 
 	log.Info("fetching sticker data from db")
 
-	sticker, err := s.stickerRepo.FindOneRandom(ctx, nil)
+	sticker, err := s.stickerRepo.FindOneRandom(ctx, tag)
 
 	if err != nil {
 		log.Error(fmt.Sprintf(`error fetching sticker data to db got %s`, err))

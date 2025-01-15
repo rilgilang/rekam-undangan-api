@@ -6,6 +6,7 @@ import (
 	"github.com/rilgilang/sticker-collection-api/internal/api/presenter"
 	"github.com/rilgilang/sticker-collection-api/internal/pkg/logger"
 	"github.com/rilgilang/sticker-collection-api/internal/service"
+	"strings"
 )
 
 func Stickers(cfg *dotenv.Config, service service.StickerService) fiber.Handler {
@@ -16,8 +17,10 @@ func Stickers(cfg *dotenv.Config, service service.StickerService) fiber.Handler 
 			log = logger.NewLog("get_sticker_handler", cfg.LoggerEnable)
 		)
 
+		tag := strings.Split(c.Queries()["tags"], ",")
+
 		//log.Info(fmt.Sprintf(`start service login for user %s`, requestBody.Email))
-		serv := service.GetOneRandomSticker(ctx, nil)
+		serv := service.GetOneRandomSticker(ctx, tag)
 		if serv.Code != 200 {
 			//log.Error(fmt.Sprintf(`error on service login got %s`, serv.Errors))
 			c.Status(serv.Code)
