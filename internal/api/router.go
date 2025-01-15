@@ -21,6 +21,8 @@ func NewRouter(cfg *dotenv.Config) *fiber.App {
 		panic(fmt.Sprintf(`db connection error got : %v`, err))
 	}
 
+	//minioClient, err := bootstrap.NewMinio(cfg)
+
 	fmt.Println("Database connection success!")
 
 	migrations.AutoMigration(db)

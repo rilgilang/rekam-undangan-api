@@ -9,18 +9,21 @@ import (
 )
 
 type Config struct {
-	AppName        string `env:"APP_NAME"`
-	AppEnvironment string `env:"APP_ENVIRONMENT"`
-	AppPort        int    `env:"APP_PORT"`
-	DBDialect      string `env:"DB_DIALECT"`
-	DBHost         string `env:"DB_HOST"`
-	DBPort         int    `env:"DB_PORT"`
-	DBName         string `env:"DB_NAME"`
-	DBUsername     string `env:"DB_USERNAME"`
-	DBPassword     string `env:"DB_PASSWORD"`
-	JWTKey         string `env:"JWT_KEY"`
-	JWTExpiredMin  int    `env:"JWT_EXPIRED_MINUTE"`
-	LoggerEnable   bool   `env:"LOGGER_ENABLE"`
+	AppName              string `env:"APP_NAME"`
+	AppEnvironment       string `env:"APP_ENVIRONMENT"`
+	AppPort              int    `env:"APP_PORT"`
+	DBDialect            string `env:"DB_DIALECT"`
+	DBHost               string `env:"DB_HOST"`
+	DBPort               int    `env:"DB_PORT"`
+	DBName               string `env:"DB_NAME"`
+	DBUsername           string `env:"DB_USERNAME"`
+	DBPassword           string `env:"DB_PASSWORD"`
+	MinioEndpoint        string `env:"MINIO_ENDPOINT"`
+	MinioAccessKey       string `env:"MINIO_ACCESS_KEY"`
+	MinioSecretAccessKey string `env:"MINIO_SECRET_ACCESS_KEY"`
+	JWTKey               string `env:"JWT_KEY"`
+	JWTExpiredMin        int    `env:"JWT_EXPIRED_MINUTE"`
+	LoggerEnable         bool   `env:"LOGGER_ENABLE"`
 }
 
 func NewLoadConfig() (*Config, error) {
@@ -45,17 +48,20 @@ func NewLoadConfig() (*Config, error) {
 		}
 
 		cfg := &Config{
-			AppName:       os.Getenv("APP_NAME"),
-			AppPort:       appPort,
-			DBDialect:     os.Getenv("DB_DIALECT"),
-			DBHost:        os.Getenv("DB_HOST"),
-			DBPort:        dbPort,
-			DBName:        os.Getenv("DB_NAME"),
-			DBUsername:    os.Getenv("DB_USERNAME"),
-			DBPassword:    os.Getenv("DB_PASSWORD"),
-			JWTKey:        os.Getenv("JWT_EXPIRED_MINUTE"),
-			JWTExpiredMin: jwtExpiredMinute,
-			LoggerEnable:  false,
+			AppName:              os.Getenv("APP_NAME"),
+			AppPort:              appPort,
+			DBDialect:            os.Getenv("DB_DIALECT"),
+			DBHost:               os.Getenv("DB_HOST"),
+			DBPort:               dbPort,
+			DBName:               os.Getenv("DB_NAME"),
+			DBUsername:           os.Getenv("DB_USERNAME"),
+			DBPassword:           os.Getenv("DB_PASSWORD"),
+			MinioEndpoint:        os.Getenv("MINIO_ENDPOINT"),
+			MinioAccessKey:       os.Getenv("MINIO_ACCESS_KEY"),
+			MinioSecretAccessKey: os.Getenv("MINIO_SECRET_ACCESS_KEY"),
+			JWTKey:               os.Getenv("JWT_EXPIRED_MINUTE"),
+			JWTExpiredMin:        jwtExpiredMinute,
+			LoggerEnable:         false,
 		}
 
 		return cfg, nil
