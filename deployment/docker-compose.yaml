@@ -11,7 +11,7 @@ services:
     networks:
       - code-network
     volumes:
-      - ../config/yaml:/go/src/github.com/rilgilang/sticker-collection-api/config/yaml
+      - ../:/go/src/github.com/rilgilang/sticker-collection-api/
     ports:
       - 8081:8081
     depends_on:

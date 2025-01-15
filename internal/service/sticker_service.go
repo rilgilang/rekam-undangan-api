@@ -23,6 +23,7 @@ type stickerService struct {
 func NewStickerService(stickerRepo repositories.StickerRepository, cfg *dotenv.Config) StickerService {
 	return &stickerService{
 		stickerRepo: stickerRepo,
+		cfg:         cfg,
 	}
 }
 
