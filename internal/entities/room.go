@@ -9,6 +9,7 @@ type Room struct {
 	gorm.Model
 	ID                   string     `gorm:"type:varchar(36);primary_key;unique" json:"id"`
 	IDCard               string     `gorm:"type:varchar(255);unique" json:"-"`
+	RoomImage            string     `gorm:"type:varchar(255);unique" json:"room_image"`
 	RoomNumber           int        `gorm:"type:integer;not null" json:"room_number"`
 	Renter               string     `gorm:"type:varchar(255)" json:"renter"`
 	Price                int        `gorm:"type:integer" json:"price"`
