@@ -1,5 +1,5 @@
 # STEP 1: Build the application
-FROM --platform=linux/amd64 golang:1.20.6-alpine3.17 as builder
+FROM --platform=linux/amd64 golang:1.23.0-alpine3.19 as builder
 
 ARG GO_BUILD_COMMAND="go build -tags static_all"
 
@@ -26,8 +26,8 @@ RUN mkdir -p $PROJECT_DIR
 
 WORKDIR $PROJECT_DIR
 
-COPY --from=builder /go/src/github.com/rilgilang/kosan-api/sticker-collection-api .
+COPY --from=builder /go/src/github.com/rilgilang/kosan-api/kosan-api .
 
-RUN chmod +x sticker-collection-api
+RUN chmod +x kosan-api
 
-CMD ["/opt/github.com/rilgilang/kosan-api/sticker-collection-api"]
+CMD ["/opt/github.com/rilgilang/kosan-api/kosan-api"]
