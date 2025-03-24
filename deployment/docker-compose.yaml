@@ -5,13 +5,13 @@ services:
     build:
       context: ../
       dockerfile: ./deployment/Dockerfile
-    working_dir: /go/src/github.com/rilgilang/sticker-collection-api
+    working_dir: /go/src/github.com/rilgilang/kosan-api
     container_name: backend
     hostname: backend
     networks:
       - code-network
     volumes:
-      - ../:/go/src/github.com/rilgilang/sticker-collection-api/
+      - ../:/go/src/github.com/rilgilang/kosan-api/
     ports:
       - 8081:8081
     depends_on:

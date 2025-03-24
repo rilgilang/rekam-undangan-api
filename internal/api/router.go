@@ -3,17 +3,15 @@ package api
 import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
-	"github.com/rilgilang/sticker-collection-api/bootstrap"
-	"github.com/rilgilang/sticker-collection-api/config/dotenv"
-	"github.com/rilgilang/sticker-collection-api/internal/api/routes"
-	"github.com/rilgilang/sticker-collection-api/internal/middlewares/jwt"
-	"github.com/rilgilang/sticker-collection-api/internal/repositories"
-	"github.com/rilgilang/sticker-collection-api/internal/service"
-	"github.com/rilgilang/sticker-collection-api/migrations"
+	"github.com/rilgilang/kosan-api/bootstrap"
+	"github.com/rilgilang/kosan-api/config/dotenv"
+	"github.com/rilgilang/kosan-api/internal/api/routes"
+	"github.com/rilgilang/kosan-api/internal/repositories"
+	"github.com/rilgilang/kosan-api/internal/service"
+	"github.com/rilgilang/kosan-api/migrations"
 )
 
-func NewRouter(cfg *dotenv.Config) *fiber.App {
-	router := fiber.New()
+func NewRouter(app *fiber.App, cfg *dotenv.Config) *fiber.App {
 
 	db, err := bootstrap.DatabaseConnection(cfg)
 
@@ -29,32 +27,32 @@ func NewRouter(cfg *dotenv.Config) *fiber.App {
 
 	//repositories
 	var (
-		userRepo    = repositories.NewUserRepo(db)
-		stickerRepo = repositories.NewStickerRepo(db)
+		roomRepo           = repositories.NewRoomRepo(db)
+		paymentHistoryRepo = repositories.NewPaymentHistoryRepo(db)
 	)
 
-	//middlewares
-	var (
-		authMidleware = jwt.NewAuthMiddleware(userRepo, cfg)
-	)
+	////middlewares
+	//var (
+	//	authMidleware = jwt.NewAuthMiddleware(userRepo, cfg)
+	//)
 
-	//service~
+	//service
 	var (
-		authService    = service.NewAuthService(authMidleware, userRepo, cfg)
-		stickerService = service.NewStickerService(stickerRepo, cfg)
+		roomService           = service.NewRoomService(roomRepo, cfg)
+		paymentHistoryService = service.NewPaymentHistoryService(paymentHistoryRepo, roomRepo, cfg)
 	)
 
 	//group
-	api := router.Group("/api")
+	api := app.Group("/api")
 
-	router.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *fiber.Ctx) error {
 		return c.Send([]byte("uwow"))
 	})
 
-	routes.AuthRouter(api, cfg, authMidleware, authService)
-	routes.StickerRoutes(api, cfg, authMidleware, stickerService)
+	routes.RoomRoutes(api, cfg, roomService)
+	routes.PaymentHistoryRoutes(api, cfg, paymentHistoryService)
 
 	//routes.HealthRouter(api)
 
-	return router
+	return app
 }

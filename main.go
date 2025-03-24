@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/rilgilang/sticker-collection-api/config/dotenv"
-	"github.com/rilgilang/sticker-collection-api/internal/api"
+	"github.com/rilgilang/kosan-api/config/dotenv"
+	"github.com/rilgilang/kosan-api/internal/api"
 
 	"log"
 )
@@ -23,14 +23,14 @@ func main() {
 	}
 
 	app := fiber.New()
-	app.Use(cors.New())
 
+	// Apply middleware
 	app.Use(cors.New(cors.Config{
 		AllowOrigins: "*",
-		AllowMethods: "GET, POST",
+		AllowMethods: "GET,POST,PUT,DELETE,OPTIONS",
 	}))
 
-	app = api.NewRouter(cfg)
+	app = api.NewRouter(app, cfg)
 
 	log.Fatal(app.Listen(fmt.Sprintf(`:%v`, cfg.AppPort)))
 }

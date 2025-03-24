@@ -3,7 +3,7 @@ package bootstrap
 import (
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
-	"github.com/rilgilang/sticker-collection-api/config/dotenv"
+	"github.com/rilgilang/kosan-api/config/dotenv"
 )
 
 func NewMinio(config *dotenv.Config) (*minio.Client, error) {

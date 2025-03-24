@@ -2,7 +2,7 @@ package bootstrap
 
 import (
 	"fmt"
-	"github.com/rilgilang/sticker-collection-api/config/dotenv"
+	"github.com/rilgilang/kosan-api/config/dotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

@@ -1,13 +1,13 @@
 package migrations
 
 import (
-	"github.com/rilgilang/sticker-collection-api/internal/entities"
+	"github.com/rilgilang/kosan-api/internal/entities"
 	"gorm.io/gorm"
 )
 
 var models = []interface{}{
-	&entities.User{},
-	&entities.Sticker{},
+	&entities.Room{},
+	&entities.PaymentHistory{},
 }
 
 func AutoMigration(db *gorm.DB) {
