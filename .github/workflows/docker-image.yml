@@ -13,24 +13,24 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-
-  preps:
-    runs-on: macos-latest
-    steps:
-      - run: |
-          brew install docker
   build:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker-compose build --no-cache --force-rm 
+    - run: |
+        brew install docker
+        docker-compose -p kosan-api -f deployment/docker-compose.yaml up -d
+
   test:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
       - name: Test the Docker image
-        run: docker-compose -p kosan-api -f deployment/docker-compose.yaml up -d
+      - run: |
+          brew install docker
+          docker-compose -p kosan-api -f deployment/docker-compose.yaml up -d
+
   push_to_registry:
     name: Push Docker image to Docker Hub
     runs-on: macos-latest
