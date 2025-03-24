@@ -2,9 +2,9 @@ name: Build and Push Docker Image to Docker Hub
 
 on:
   push:
-    branches: [ "master", "main" ]
+    branches: [ "main", "master" ]
   pull_request:
-    branches: [ "master", "main" ]
+    branches: [ "main", "master" ]
 
 env:
   REGISTRY: docker.io
@@ -12,30 +12,31 @@ env:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout source code
+        uses: actions/checkout@v3
 
       - name: Build the Docker image
         run: |
-          brew install docker
           docker-compose -p kosan-api -f deployment/docker-compose.yaml up -d
 
   test:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout source code
+        uses: actions/checkout@v3
 
-      - name: Test the Docker image
+      - name: Run tests
         run: |
-          brew install docker
           docker-compose -p kosan-api -f deployment/docker-compose.yaml up -d
+          # Add test commands here (e.g., go test ./...)
 
   push_to_registry:
     name: Push Docker image to Docker Hub
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
-      - name: Check out the repo
+      - name: Checkout source code
         uses: actions/checkout@v3
 
       - name: Set up Docker Buildx
@@ -47,7 +48,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Extract metadata (tags, labels) for Docker
+      - name: Extract metadata (tags, labels)
         id: meta
         uses: docker/metadata-action@v5
         with:
