@@ -12,29 +12,9 @@ env:
 
 jobs:
   build:
+    name: Build and Push Docker Image
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout source code
-        uses: actions/checkout@v3
 
-      - name: Build the Docker image
-        run: |
-          docker-compose -p kosan-api -f deployment/docker-compose.yaml up -d
-
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout source code
-        uses: actions/checkout@v3
-
-      - name: Run tests
-        run: |
-          docker-compose -p kosan-api -f deployment/docker-compose.yaml up -d
-          # Add test commands here (e.g., go test ./...)
-
-  push_to_registry:
-    name: Push Docker image to Docker Hub
-    runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
@@ -48,7 +28,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Extract metadata (tags, labels)
+      - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
