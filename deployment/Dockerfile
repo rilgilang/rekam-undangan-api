@@ -1,5 +1,5 @@
 # STEP 1: Build the application
-FROM --platform=linux/amd64 golang:1.23.0-alpine3.19 as builder
+FROM --platform=linux/amd64 golang:1.23.0-alpine3.19 AS builder
 
 ARG GO_BUILD_COMMAND="go build -tags static_all"
 
@@ -7,7 +7,10 @@ RUN apk update && apk --no-cache add build-base git bash coreutils openssh opens
 
 WORKDIR /app
 
-COPY go.mod go.sum ./
+# Copy go.mod (only go.sum if it exists)
+COPY go.mod ./
+COPY go.sum ./  # This will work only if go.sum exists, otherwise, remove this line.
+
 RUN go mod tidy && go mod download && go mod vendor
 
 COPY . . 
