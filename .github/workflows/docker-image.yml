@@ -45,11 +45,11 @@ jobs:
             # Load new Docker image
             docker load -i kosan-api.tar
 
-            # Stop and remove old containers
-            docker compose -f docker-compose.yaml down
+           # Stop and remove old containers if running
+            docker compose down || true
 
             # Start new containers with the updated image
-            docker compose -f docker-compose.yaml up -d --build
+            docker compose up -d --build
 
             # Remove old Docker images to free space
             docker image prune -f
