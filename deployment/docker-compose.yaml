@@ -2,10 +2,7 @@ version: "3"
 
 services:
   backend:
-    build:
-      context: ../
-      dockerfile: ./deployment/Dockerfile
-    working_dir: /go/src/github.com/rilgilang/kosan-api
+    image: ghcr.io/rilgilang/kosan-api:latest  # Use the GHCR image
     container_name: backend
     hostname: backend
     labels:
@@ -20,6 +17,7 @@ services:
       - ./:/go/src/github.com/rilgilang/kosan-api/
     ports:
       - 8081:8081
+    restart: always  # Ensures it restarts if it crashes
 
 networks:
   web:
