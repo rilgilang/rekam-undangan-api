@@ -1,53 +1,48 @@
-name: Deploy Go App with GitHub Container Registry
+name: Deploy to VPS via GHCR
 
 on:
   push:
     branches:
-      - master
-
-env:
-  IMAGE_NAME: "ghcr.io/${{ github.repository }}/kosan-api"
-  VPS_APP_PATH: "~/gilang/kosan-api"
+      - master  # Runs when pushing to the master branch
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Log in to GitHub Container Registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      # Login to GitHub Container Registry (GHCR)
+      - name: Login to GitHub Container Registry
+        run: echo "${{ secrets.GH_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
+      # Build and Push Docker Image to GHCR
       - name: Build and Push Docker Image
         run: |
-          docker build -t $IMAGE_NAME:latest -f deployment/Dockerfile .
+          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/kosan-api
+          docker build -t $IMAGE_NAME:latest -f ./deployment/Dockerfile .
           docker push $IMAGE_NAME:latest
 
-      - name: Set up SSH and Sync Files to VPS
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
-
-          # Sync the latest docker-compose.yaml to VPS
-          scp deployment/docker-compose.yaml ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:$VPS_APP_PATH/
-
+      # Deploy on VPS using SSH
       - name: Deploy on VPS
-        run: |
-          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
-            cd ~/gilang/kosan-api
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            echo "Pulling latest docker-compose.yaml..."
+            cd /path/to/your/project  # Update this path
+            git pull origin master
 
-            # Log in to GitHub Container Registry (only required once)
-            echo "${{ secrets.GH_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            echo "Stopping existing container..."
+            docker compose down
 
-            # Pull the latest image
-            docker-compose pull
+            echo "Pulling latest image..."
+            docker login ghcr.io -u ${{ github.actor }} --password ${{ secrets.GH_TOKEN }}
+            docker pull ghcr.io/${{ github.repository_owner }}/kosan-api:latest
 
-            # Restart the container
-            docker-compose up -d --remove-orphans
-
-            # Remove old unused images
-            docker image prune -f
-          EOF
+            echo "Starting new container..."
+            docker compose up -d
