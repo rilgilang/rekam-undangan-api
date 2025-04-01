@@ -8,32 +8,21 @@ services:
     working_dir: /go/src/github.com/rilgilang/kosan-api
     container_name: backend
     hostname: backend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.myapp.rule=Host(`rilgilang.duckdns.org`)"
+      - "traefik.http.routers.myapp.entrypoints=websecure"
+      - "traefik.http.routers.myapp.tls.certresolver=letsencrypt"
     networks:
-      - code-network
+      - web
+      - database
     volumes:
-      - ../:/go/src/github.com/rilgilang/kosan-api/
+      - ./:/go/src/github.com/rilgilang/kosan-api/
     ports:
       - 8081:8081
-    depends_on:
-      - postgres
-
-  postgres:
-    image: postgres:17.2
-    environment:
-      POSTGRES_USER: "admin"
-      POSTGRES_PASSWORD: "admin"
-      POSTGRES_DB: "sticker-collection"
-    volumes:
-      - ../config/postgresql:/var/lib/postgres
-    ports:
-      - "5432:5432"
-    networks:
-      - code-network
-
-volumes:
-  postgres:
-    driver: local
 
 networks:
-  code-network:
-    driver: bridge
+  web:
+    external: true
+  database:
+    external: true
