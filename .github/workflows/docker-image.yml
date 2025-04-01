@@ -46,10 +46,10 @@ jobs:
             docker load -i kosan-api.tar
 
             # Stop and remove old containers
-            docker compose -p kosan-api -f $VPS_APP_PATH/deployment/docker-compose.yaml up -d    down
+            docker compose -f docker-compose.yaml down
 
             # Start new containers with the updated image
-            docker compose -p kosan-api -f $VPS_APP_PATH/deployment/docker-compose.yaml up -d    --build
+            docker compose -f docker-compose.yaml up -d --build
 
             # Remove old Docker images to free space
             docker image prune -f
