@@ -44,6 +44,9 @@ jobs:
 
             # Load new Docker image
             docker load -i kosan-api.tar
+          
+            # Checking files directory
+            ls
 
            # Stop and remove old containers if running
             docker compose down || true
