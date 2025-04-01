@@ -14,10 +14,10 @@ jobs:
 
       - name: Set up SSH
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+              mkdir -p ~/.ssh
+              echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/gilang/github_rsa
+              chmod 600 ~/.ssh/gilang/github_rsa
+              ssh-keyscan -H github.com >> ~/.ssh/known_hosts
 
       - name: Deploy to VPS
         run: |
@@ -31,7 +31,7 @@ jobs:
             git pull origin master
           
             if [ ! -f "docker-compose.yaml" ]; then
-              echo "Error: docker-compose.yml not found!"
+              echo "Error: docker-compose.yaml not found!"
               exit 1
             fi
 
