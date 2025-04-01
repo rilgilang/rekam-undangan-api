@@ -24,14 +24,18 @@ jobs:
         run: |
           docker save -o $IMAGE_NAME.tar $IMAGE_NAME:latest
 
-      - name: Transfer Docker Image to VPS
+      - name: Transfer Docker Image and Compose File to VPS
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
 
+          # Transfer Docker image
           scp $IMAGE_NAME.tar ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:$VPS_APP_PATH/
+
+          # Transfer docker-compose.yaml (ensure it's in your repository)
+          scp deployment/docker-compose.yaml ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:$VPS_APP_PATH/
 
       - name: Deploy on VPS
         run: |
@@ -42,10 +46,10 @@ jobs:
             docker load -i kosan-api.tar
 
             # Stop and remove old containers
-            docker compose -f deployment/docker-compose.yaml down
+            docker compose -f docker-compose.yaml down
 
             # Start new containers with the updated image
-            docker compose -f deployment/docker-compose.yaml up -d --build
+            docker compose -f docker-compose.yaml up -d --build
 
             # Remove old Docker images to free space
             docker image prune -f
