@@ -1,39 +1,53 @@
-name: Deploy to VPS
+name: Deploy Go App with Docker
 
 on:
   push:
     branches:
       - master
 
+env:
+  IMAGE_NAME: "kosan-api"
+  VPS_APP_PATH: "~/apps/kosan-api"
+
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Set up SSH
+      - name: Build Docker Image
         run: |
-              mkdir -p ~/.ssh
-              echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/gilang/github_rsa
-              chmod 600 ~/.ssh/gilang/github_rsa
-              ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+          docker build -t $IMAGE_NAME:latest .
 
-      - name: Deploy to VPS
+      - name: Save Docker Image
+        run: |
+          docker save -o $IMAGE_NAME.tar $IMAGE_NAME:latest
+
+      - name: Transfer Docker Image to VPS
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+
+          scp $IMAGE_NAME.tar ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:$VPS_APP_PATH/
+
+      - name: Deploy on VPS
         run: |
           ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
-            if [ ! -d "~/gilang/kosan-api/.git" ]; then
-              echo "Repository not found. Cloning..."
-              git clone git@github.com:${{ github.repository }}.git ~/gilang/kosan-api
-            fi
-
             cd ~/gilang/kosan-api
-            git pull origin master
-          
-            if [ ! -f "docker-compose.yaml" ]; then
-              echo "Error: docker-compose.yaml not found!"
-              exit 1
-            fi
 
-            docker-compose up -d --build
+            # Load new Docker image
+            docker load -i kosan-api.tar
+
+            # Stop and remove the old container
+            docker stop kosan-api || true
+            docker rm kosan-api || true
+
+            # Run the new container
+            docker run -d --name kosan-api -p 8080:8080 kosan-api:latest
+
+            # Remove old Docker images to free space
+            docker image prune -f
           EOF
