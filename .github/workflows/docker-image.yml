@@ -30,7 +30,7 @@ jobs:
             cd ~/gilang/kosan-api
             git pull origin master
           
-            if [ ! -f "docker-compose.yml" ]; then
+            if [ ! -f "docker-compose.yaml" ]; then
               echo "Error: docker-compose.yml not found!"
               exit 1
             fi
