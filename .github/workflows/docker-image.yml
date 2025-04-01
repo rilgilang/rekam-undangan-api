@@ -1,4 +1,4 @@
-name: Deploy Go App with Docker
+name: Deploy Go App with Docker Compose
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t $IMAGE_NAME:latest -f deployment/Dockerfile . 
+          docker build -t $IMAGE_NAME:latest -f deployment/Dockerfile .
 
       - name: Save Docker Image
         run: |
@@ -41,12 +41,11 @@ jobs:
             # Load new Docker image
             docker load -i kosan-api.tar
 
-            # Stop and remove the old container
-            docker stop kosan-api || true
-            docker rm kosan-api || true
+            # Stop and remove old containers
+            docker compose -f deployment/docker-compose.yaml down
 
-            # Run the new container
-            docker run -d --name kosan-api -p 8080:8080 kosan-api:latest
+            # Start new containers with the updated image
+            docker compose -f deployment/docker-compose.yaml up -d --build
 
             # Remove old Docker images to free space
             docker image prune -f
