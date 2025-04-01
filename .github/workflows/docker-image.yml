@@ -5,6 +5,10 @@ on:
     branches:
       - master  # Runs when pushing to the master branch
 
+env:
+  IMAGE_NAME: "ghcr.io/${{ github.repository }}/kosan-api"
+  VPS_APP_PATH: "~/gilang/kosan-api"
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -21,7 +25,6 @@ jobs:
       # Build and Push Docker Image to GHCR
       - name: Build and Push Docker Image
         run: |
-          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/kosan-api
           docker build -t $IMAGE_NAME:latest -f ./deployment/Dockerfile .
           docker push $IMAGE_NAME:latest
 
@@ -34,7 +37,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             echo "Pulling latest docker-compose.yaml..."
-            cd /path/to/your/project  # Update this path
+            cd 
             git pull origin master
 
             echo "Stopping existing container..."
