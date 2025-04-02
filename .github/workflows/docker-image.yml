@@ -46,7 +46,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             echo "Pulling latest docker-compose.yaml..."
-            cd $VPS_APP_PATH
+            cd ~/gilang/kosan-api
             
             echo "Stopping existing container..."
             docker compose down
