@@ -22,6 +22,10 @@ jobs:
       - name: Login to GitHub Container Registry
         run: echo "${{ secrets.GH_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
+      - name: Transfer Docker Image and Compose File to VPS
+        run: |
+          scp deployment/docker-compose.yaml ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:$VPS_APP_PATH/
+
       # Build and Push Docker Image to GHCR
       - name: Build and Push Docker Image
         run: |
@@ -37,9 +41,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             echo "Pulling latest docker-compose.yaml..."
-            cd 
-            git pull origin master
-
+            cd $VPS_APP_PATH
+            
             echo "Stopping existing container..."
             docker compose down
 
