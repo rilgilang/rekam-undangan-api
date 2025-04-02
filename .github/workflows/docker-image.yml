@@ -24,6 +24,11 @@ jobs:
 
       - name: Transfer Docker Image and Compose File to VPS
         run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+          
           scp deployment/docker-compose.yaml ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:$VPS_APP_PATH/
 
       # Build and Push Docker Image to GHCR
