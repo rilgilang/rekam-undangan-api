@@ -1,15 +1,16 @@
 version: "3"
 
 services:
-  backend:
+  kosan-api:
     image: ghcr.io/rilgilang/kosan-api:latest  # Use the GHCR image
-    container_name: backend
-    hostname: backend
+    container_name: kosan-api
+    hostname: kosan-api
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.myapp.rule=Host(`rilgilang.duckdns.org`)"
-      - "traefik.http.routers.myapp.entrypoints=websecure"
-      - "traefik.http.routers.myapp.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.kosan-api.rule=Host(`rilgilang.duckdns.org`) && PathPrefix(`/kosan`)"
+      - "traefik.http.routers.kosan-api.entrypoints=websecure"
+      - "traefik.http.routers.kosan-api.tls.certresolver=letsencrypt"
+      - "traefik.http.services.kosan-api.loadbalancer.server.port=8081"
     networks:
       - web
       - database
@@ -18,6 +19,8 @@ services:
     ports:
       - 8081:8081
     restart: always  # Ensures it restarts if it crashes
+    env_file:
+      - .env
 
 networks:
   web:
