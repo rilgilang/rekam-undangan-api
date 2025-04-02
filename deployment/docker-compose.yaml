@@ -11,6 +11,8 @@ services:
       - "traefik.http.routers.kosan-api.entrypoints=websecure"
       - "traefik.http.routers.kosan-api.tls.certresolver=letsencrypt"
       - "traefik.http.services.kosan-api.loadbalancer.server.port=8081"
+      - "traefik.http.middlewares.kosan-strip.stripprefix.prefixes=/kosan"
+      - "traefik.http.routers.kosan-api.middlewares=kosan-strip"
     networks:
       - web
       - database
