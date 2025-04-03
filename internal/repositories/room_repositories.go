@@ -28,7 +28,7 @@ func NewRoomRepo(db *gorm.DB) RoomRepository {
 func (r *roomRepository) FetchAll(ctx context.Context) ([]entities.Room, error) {
 	rooms := []entities.Room{}
 
-	err := r.db.WithContext(ctx).Find(&rooms).Order("created_at ASC").Error
+	err := r.db.WithContext(ctx).Find(&rooms).Order("room_number ASC").Error
 
 	if err != nil {
 		if err.Error() == consts.SqlNoRow {
