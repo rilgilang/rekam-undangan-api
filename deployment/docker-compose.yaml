@@ -2,7 +2,7 @@ version: "3"
 
 services:
   kosan-api:
-    image: ghcr.io/rilgilang/kosan-api:latest  # Use the GHCR image
+    image: ghcr.io/rilgilang/kosan-api/kosan-api:latest  # Use the GHCR image
     container_name: kosan-api
     hostname: kosan-api
     labels:
