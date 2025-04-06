@@ -28,13 +28,45 @@ func NewRoomRepo(db *gorm.DB) RoomRepository {
 func (r *roomRepository) FetchAll(ctx context.Context) ([]entities.Room, error) {
 	rooms := []entities.Room{}
 
-	err := r.db.WithContext(ctx).Find(&rooms).Order("room_number ASC").Error
+	rows, err := r.db.WithContext(ctx).Raw(`
+		SELECT 
+		    id,
+		    room_number,
+		    room_image,
+		    renter,
+		    price,
+		    already_paid_this_month,
+		    available,
+		    first_check_in,
+		    check_in,
+		    check_out
+    	From rooms 
+    	ORDER BY room_number ASC`).Rows()
 
 	if err != nil {
 		if err.Error() == consts.SqlNoRow {
 			return nil, nil
 		}
 		return nil, err
+	}
+
+	for rows.Next() {
+		room := entities.Room{}
+		if err = rows.Scan(
+			&room.ID,
+			&room.RoomNumber,
+			&room.RoomImage,
+			&room.Renter,
+			&room.Price,
+			&room.AlreadyPaidThisMonth,
+			&room.Available,
+			&room.FirstCheckIn,
+			&room.CheckIn,
+			&room.CheckOut,
+		); err != nil {
+			return nil, err
+		}
+		rooms = append(rooms, room)
 	}
 
 	return rooms, nil
