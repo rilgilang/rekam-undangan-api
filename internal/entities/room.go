@@ -23,6 +23,24 @@ type Room struct {
 	DeletedAt            *time.Time `sql:"index" json:"deleted_at,omitempty"`
 }
 
+type DetailedRoom struct {
+	ID                   string           `json:"id"`
+	IDCard               string           `json:"-"`
+	RoomImage            *string          `json:"room_image"`
+	RoomNumber           int              `json:"room_number"`
+	Renter               string           `json:"renter"`
+	Price                int              `json:"price"`
+	AlreadyPaidThisMonth bool             `json:"already_paid_this_month"`
+	Available            bool             `json:"available"`
+	FirstCheckIn         time.Time        `json:"first_check_in"`
+	CheckIn              time.Time        `json:"check_in"`
+	CheckOut             time.Time        `json:"check_out"`
+	PaymentHistory       []PaymentHistory `json:"payment_history"`
+	CreatedAt            time.Time        `json:"created_at" sql:"DEFAULT:CURRENT_TIMESTAMP"`
+	UpdatedAt            time.Time        `json:"updated_at" sql:"DEFAULT:CURRENT_TIMESTAMP"`
+	DeletedAt            *time.Time       `json:"deleted_at,omitempty"`
+}
+
 type UpdateRenterPayload struct {
 	ID     string `json:"id,omitempty"`
 	IDCard string `json:"id_card,omitempty"`

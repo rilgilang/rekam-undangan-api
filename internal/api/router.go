@@ -38,7 +38,7 @@ func NewRouter(app *fiber.App, cfg *dotenv.Config) *fiber.App {
 
 	//service
 	var (
-		roomService           = service.NewRoomService(roomRepo, cfg)
+		roomService           = service.NewRoomService(roomRepo, paymentHistoryRepo, cfg)
 		paymentHistoryService = service.NewPaymentHistoryService(paymentHistoryRepo, roomRepo, cfg)
 	)
 
