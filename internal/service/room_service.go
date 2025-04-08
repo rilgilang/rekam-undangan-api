@@ -65,7 +65,7 @@ func (s *roomService) GetDetailedRoom(ctx context.Context, roomId string) *prese
 
 	paymentsHistories, err := s.paymentHistoriesRepo.FetchAllByRoomID(ctx, roomId)
 	if err != nil {
-		log.Error(fmt.Sprintf(`error fetching payment histories data to db got %s`, err))
+		log.Error(fmt.Sprintf(` error fetching payment histories data to db got %s`, err))
 		return response.WithCode(500).WithError(errors.New("something went wrong!"))
 	}
 
