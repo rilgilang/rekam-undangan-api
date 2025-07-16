@@ -1,7 +1,7 @@
-Simple Kosan API
+Rekam Undangan API
 ============================
 
-A simple REST API for managing kosan app 
+A REST API for rekam undangan app 
 
 This app is build with [Go Fiber](https://gofiber.io/) as the framework
 
