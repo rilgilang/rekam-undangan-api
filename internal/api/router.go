@@ -3,12 +3,13 @@ package api
 import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
-	"github.com/rilgilang/kosan-api/bootstrap"
-	"github.com/rilgilang/kosan-api/config/dotenv"
-	"github.com/rilgilang/kosan-api/internal/api/routes"
-	"github.com/rilgilang/kosan-api/internal/repositories"
-	"github.com/rilgilang/kosan-api/internal/service"
-	"github.com/rilgilang/kosan-api/migrations"
+	"github.com/rilgilang/rekam-undangan-api/bootstrap"
+	"github.com/rilgilang/rekam-undangan-api/config/dotenv"
+	"github.com/rilgilang/rekam-undangan-api/internal/api/routes"
+	"github.com/rilgilang/rekam-undangan-api/internal/pkg"
+	"github.com/rilgilang/rekam-undangan-api/internal/repositories"
+	"github.com/rilgilang/rekam-undangan-api/internal/service"
+	"github.com/rilgilang/rekam-undangan-api/migrations"
 )
 
 func NewRouter(app *fiber.App, cfg *dotenv.Config) *fiber.App {
@@ -21,14 +22,16 @@ func NewRouter(app *fiber.App, cfg *dotenv.Config) *fiber.App {
 
 	//minioClient, err := bootstrap.NewMinio(cfg)
 
+	// Redis client connect
+	cache := pkg.NewCache(bootstrap.NewCache(cfg))
+
 	fmt.Println("Database connection success!")
 
 	migrations.AutoMigration(db)
 
 	//repositories
 	var (
-		roomRepo           = repositories.NewRoomRepo(db)
-		paymentHistoryRepo = repositories.NewPaymentHistoryRepo(db)
+		videoRepo = repositories.NewVideoRepo(db)
 	)
 
 	////middlewares
@@ -38,8 +41,7 @@ func NewRouter(app *fiber.App, cfg *dotenv.Config) *fiber.App {
 
 	//service
 	var (
-		roomService           = service.NewRoomService(roomRepo, paymentHistoryRepo, cfg)
-		paymentHistoryService = service.NewPaymentHistoryService(paymentHistoryRepo, roomRepo, cfg)
+		videoService = service.NewVideoService(videoRepo, cache, cfg)
 	)
 
 	//group
@@ -49,8 +51,7 @@ func NewRouter(app *fiber.App, cfg *dotenv.Config) *fiber.App {
 		return c.Send([]byte("uwow"))
 	})
 
-	routes.RoomRoutes(api, cfg, roomService)
-	routes.PaymentHistoryRoutes(api, cfg, paymentHistoryService)
+	routes.ProcessVideoRoutes(api, cfg, videoService)
 
 	//routes.HealthRouter(api)
 

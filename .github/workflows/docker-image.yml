@@ -6,8 +6,8 @@ on:
       - master  # Runs when pushing to the master branch
 
 env:
-  IMAGE_NAME: "ghcr.io/${{ github.repository_owner }}/kosan-api/kosan-api"
-  VPS_APP_PATH: "~/gilang/kosan-api"
+  IMAGE_NAME: "ghcr.io/${{ github.repository_owner }}/rekam-undangan-api/rekam-undangan-api"
+  VPS_APP_PATH: "~/gilang/rekam-undangan-api"
 
 jobs:
   deploy:
@@ -46,14 +46,14 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             echo "Pulling latest docker-compose.yaml..."
-            cd ~/gilang/kosan-api
+            cd ~/gilang/rekam-undangan-api
             
             echo "Stopping existing container..."
             docker compose down
 
             echo "Pulling latest image..."
             docker login ghcr.io -u ${{ github.actor }} --password ${{ secrets.GH_TOKEN }}
-            docker pull ghcr.io/${{ github.repository_owner }}/kosan-api/kosan-api:latest
+            docker pull ghcr.io/${{ github.repository_owner }}/rekam-undangan-api/rekam-undangan-api:latest
 
             echo "Starting new container..."
             docker compose up -d

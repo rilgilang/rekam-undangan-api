@@ -1,13 +1,13 @@
 package migrations
 
 import (
-	"github.com/rilgilang/kosan-api/internal/entities"
+	"github.com/rilgilang/rekam-undangan-api/internal/entities"
 	"gorm.io/gorm"
 )
 
 var models = []interface{}{
-	&entities.Room{},
-	&entities.PaymentHistory{},
+	&entities.User{},
+	&entities.Video{},
 }
 
 func AutoMigration(db *gorm.DB) {

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/rilgilang/kosan-api/config/dotenv"
-	"github.com/rilgilang/kosan-api/internal/api"
+	"github.com/rilgilang/rekam-undangan-api/config/dotenv"
+	"github.com/rilgilang/rekam-undangan-api/internal/api"
 
 	"log"
 )
@@ -13,7 +13,7 @@ import (
 func main() {
 
 	//cfg, err := yaml.NewConfig()
-	//if err != nil {
+	//if err != nil {NewLoadConfig
 	//	log.Fatal(fmt.Sprintf(`read cfg yaml got error : %v`, err))
 	//}
 
@@ -27,7 +27,7 @@ func main() {
 	// Apply middleware
 	app.Use(cors.New(cors.Config{
 		AllowOrigins: "*",
-		AllowMethods: "GET,POST,PUT,DELETE,OPTIONS",
+		AllowMethods: "GET,POST",
 	}))
 
 	app = api.NewRouter(app, cfg)

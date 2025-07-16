@@ -18,6 +18,9 @@ type Config struct {
 	DBName               string `env:"DB_NAME"`
 	DBUsername           string `env:"DB_USERNAME"`
 	DBPassword           string `env:"DB_PASSWORD"`
+	RedisHost            string `env:"REDIS_HOST"`
+	RedisPassword        string `env:"REDIS_PASSWORD"`
+	RedisDB              int    `env:"REDIS_DB"`
 	MinioEndpoint        string `env:"MINIO_ENDPOINT"`
 	MinioAccessKey       string `env:"MINIO_ACCESS_KEY"`
 	MinioSecretAccessKey string `env:"MINIO_SECRET_ACCESS_KEY"`
@@ -44,7 +47,12 @@ func NewLoadConfig() (*Config, error) {
 
 		jwtExpiredMinute, err := strconv.Atoi(os.Getenv("JWT_EXPIRED_MINUTE"))
 		if err != nil {
-			return nil, errors.New("error convert env db port")
+			return nil, errors.New("error convert env jwt expired minute")
+		}
+
+		redisDB, err := strconv.Atoi(os.Getenv("REDIS_DB"))
+		if err != nil {
+			return nil, errors.New("error convert env redis db")
 		}
 
 		cfg := &Config{
@@ -56,6 +64,9 @@ func NewLoadConfig() (*Config, error) {
 			DBName:               os.Getenv("DB_NAME"),
 			DBUsername:           os.Getenv("DB_USERNAME"),
 			DBPassword:           os.Getenv("DB_PASSWORD"),
+			RedisHost:            os.Getenv("REDIS_HOST"),
+			RedisDB:              redisDB,
+			RedisPassword:        os.Getenv("REDIS_PASSWORD"),
 			MinioEndpoint:        os.Getenv("MINIO_ENDPOINT"),
 			MinioAccessKey:       os.Getenv("MINIO_ACCESS_KEY"),
 			MinioSecretAccessKey: os.Getenv("MINIO_SECRET_ACCESS_KEY"),

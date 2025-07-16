@@ -1,4 +1,4 @@
-module github.com/rilgilang/kosan-api
+module github.com/rilgilang/rekam-undangan-api
 
 go 1.23.0
 
@@ -7,9 +7,11 @@ toolchain go1.23.7
 require (
 	github.com/caarlos0/env/v11 v11.3.1
 	github.com/gofiber/fiber/v2 v2.52.6
+	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
 	github.com/minio/minio-go/v7 v7.0.88
 	github.com/pkg/errors v0.9.1
+	github.com/redis/go-redis/v9 v9.11.0
 	github.com/sirupsen/logrus v1.9.3
 	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/driver/postgres v1.5.11
@@ -18,10 +20,11 @@ require (
 
 require (
 	github.com/andybalholm/brotli v1.1.0 // indirect
+	github.com/cespare/xxhash/v2 v2.3.0 // indirect
+	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/go-ini/ini v1.67.0 // indirect
 	github.com/goccy/go-json v0.10.5 // indirect
-	github.com/google/uuid v1.6.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
 	github.com/jackc/pgx/v5 v5.5.5 // indirect

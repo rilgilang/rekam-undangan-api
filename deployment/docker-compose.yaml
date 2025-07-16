@@ -1,23 +1,23 @@
 version: "3"
 
 services:
-  kosan-api:
-    image: ghcr.io/rilgilang/kosan-api/kosan-api:latest  # Use the GHCR image
-    container_name: kosan-api
-    hostname: kosan-api
+  rekam-undangan-api:
+    image: ghcr.io/rilgilang/rekam-undangan-api/rekam-undangan-api:latest  # Use the GHCR image
+    container_name: rekam-undangan-api
+    hostname: rekam-undangan-api
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.kosan-api.rule=Host(`rilgilang.duckdns.org`) && PathPrefix(`/kosan`)"
-      - "traefik.http.routers.kosan-api.entrypoints=websecure"
-      - "traefik.http.routers.kosan-api.tls.certresolver=letsencrypt"
-      - "traefik.http.services.kosan-api.loadbalancer.server.port=8081"
+      - "traefik.http.routers.rekam-undangan-api.rule=Host(`rilgilang.duckdns.org`) && PathPrefix(`/kosan`)"
+      - "traefik.http.routers.rekam-undangan-api.entrypoints=websecure"
+      - "traefik.http.routers.rekam-undangan-api.tls.certresolver=letsencrypt"
+      - "traefik.http.services.rekam-undangan-api.loadbalancer.server.port=8081"
       - "traefik.http.middlewares.kosan-strip.stripprefix.prefixes=/kosan"
-      - "traefik.http.routers.kosan-api.middlewares=kosan-strip"
+      - "traefik.http.routers.rekam-undangan-api.middlewares=kosan-strip"
     networks:
       - web
       - database
     volumes:
-      - ./:/go/src/github.com/rilgilang/kosan-api/
+      - ./:/go/src/github.com/rilgilang/rekam-undangan-api/
     ports:
       - 8081:8081
     restart: always  # Ensures it restarts if it crashes
