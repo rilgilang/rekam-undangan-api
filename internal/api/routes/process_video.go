@@ -9,4 +9,5 @@ import (
 
 func ProcessVideoRoutes(app fiber.Router, cfg *dotenv.Config, service service.VideoService) {
 	app.Post("/process-video", handlers.ProcessVideo(cfg, service))
+	app.Get("/video", handlers.GetAllProcessedVideo(cfg, service))
 }

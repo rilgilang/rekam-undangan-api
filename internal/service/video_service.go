@@ -13,7 +13,7 @@ import (
 )
 
 type VideoService interface {
-	//GetAllVideo(ctx context.Context) *presenter.Response
+	GetAllVideo(ctx context.Context) *presenter.Response
 	ProcessVideo(ctx context.Context, url string) *presenter.Response
 }
 
@@ -29,6 +29,22 @@ func NewVideoService(videoRepo repositories.VideoRepository, cache pkg.Cache, cf
 		cache:     cache,
 		cfg:       cfg,
 	}
+}
+
+func (s *videoService) GetAllVideo(ctx context.Context) *presenter.Response {
+	var (
+		log      = logger.NewLog("process_video_service", s.cfg.LoggerEnable)
+		response = presenter.Response{}
+	)
+
+	videos, err := s.videoRepo.FetchAll(ctx)
+	if err != nil {
+		fmt.Println("error wir --> ", err)
+		log.Info(fmt.Sprintf(`error get processing the url: %s`, err))
+		return response.WithCode(500).WithError(errors.New("something went wrong!"))
+	}
+
+	return response.WithCode(200).WithData(videos)
 }
 
 func (s *videoService) ProcessVideo(ctx context.Context, url string) *presenter.Response {

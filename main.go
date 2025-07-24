@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/rilgilang/rekam-undangan-api/config/dotenv"
 	"github.com/rilgilang/rekam-undangan-api/internal/api"
+	"time"
 
 	"log"
 )
@@ -28,6 +30,10 @@ func main() {
 	app.Use(cors.New(cors.Config{
 		AllowOrigins: "*",
 		AllowMethods: "GET,POST",
+	}), limiter.New(limiter.Config{
+		Max:               10,
+		Expiration:        30 * time.Second,
+		LimiterMiddleware: limiter.SlidingWindow{},
 	}))
 
 	app = api.NewRouter(app, cfg)

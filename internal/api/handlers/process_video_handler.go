@@ -11,23 +11,23 @@ import (
 	"net/http"
 )
 
-//func GetAllProcessedVideo(cfg *dotenv.Config, service service.VideoService) fiber.Handler {
-//	return func(c *fiber.Ctx) error {
-//
-//		var (
-//			ctx = c.Context()
-//		)
-//
-//		serv := service.GetAllPaymentHistoriesByRoomId(ctx, roomId)
-//		if serv.Code != 200 {
-//			c.Status(serv.Code)
-//			return c.JSON(presenter.ErrorResponse(serv.Errors))
-//		}
-//
-//		c.Status(200)
-//		return c.JSON(presenter.SuccessResponse(serv.Data))
-//	}
-//}
+func GetAllProcessedVideo(cfg *dotenv.Config, service service.VideoService) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+
+		var (
+			ctx = c.Context()
+		)
+
+		serv := service.GetAllVideo(ctx)
+		if serv.Code != 200 {
+			c.Status(serv.Code)
+			return c.JSON(presenter.ErrorResponse(serv.Errors))
+		}
+
+		c.Status(200)
+		return c.JSON(presenter.SuccessResponse(serv.Data))
+	}
+}
 
 func ProcessVideo(cfg *dotenv.Config, service service.VideoService) fiber.Handler {
 	return func(c *fiber.Ctx) error {
