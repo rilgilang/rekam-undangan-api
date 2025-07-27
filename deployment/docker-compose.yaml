@@ -2,7 +2,7 @@ version: "3"
 
 services:
   rekam-undangan-api:
-    image: ghcr.io/rilgilang/rekam-undangan-api/rekam-undangan-api:latest  # Use the GHCR image
+    image: ghcr.io/rilgilang/rekam-undangan-api  # Use the GHCR image
     container_name: rekam-undangan-api
     hostname: rekam-undangan-api
     labels:
@@ -14,18 +14,14 @@ services:
       - "traefik.http.middlewares.kosan-strip.stripprefix.prefixes=/kosan"
       - "traefik.http.routers.rekam-undangan-api.middlewares=kosan-strip"
     networks:
-      - web
-      - database
+      - aio_default
     volumes:
       - ./:/go/src/github.com/rilgilang/rekam-undangan-api/
     ports:
       - 8081:8081
-    restart: always  # Ensures it restarts if it crashes
     env_file:
       - .env
 
 networks:
-  web:
-    external: true
-  database:
+  aio_default:
     external: true
