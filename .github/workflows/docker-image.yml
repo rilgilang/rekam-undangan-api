@@ -3,7 +3,7 @@ name: Deploy to VPS via GHCR
 on:
   push:
     branches:
-      - master  # Runs when pushing to the master branch
+      - master
 
 env:
   IMAGE_NAME: "ghcr.io/${{ github.repository_owner }}/rekam-undangan-api"
@@ -27,10 +27,14 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
-          
-          scp deployment/docker-compose.yaml ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:$VPS_APP_PATH/
 
+          eval "$(ssh-agent -s)"
+          ssh-add <(echo "${{ secrets.SSH_PRIVATE_KEY }}") <<< "${{ secrets.SSH_PASSPHRASE }}"
+
+          ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+
+          scp ./deployment/docker-compose.yaml ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:$VPS_APP_PATH/
+        shell: bash
       # Build and Push Docker Image to GHCR
       - name: Build and Push Docker Image
         run: |
@@ -43,17 +47,27 @@ jobs:
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            export VPS_APP_PATH=~/app/rekam-undangan-api
+            export IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/rekam-undangan-api
+            
+            echo "Path       : $VPS_APP_PATH"
+            echo "IMAGE_NAME : $IMAGE_NAME"
+            
             echo "Pulling latest docker-compose.yaml..."
-            cd ~/app/rekam-undangan-api
+            cd $VPS_APP_PATH
             
             echo "Stopping existing container..."
             docker compose down
-
+            
+            echo "Delete unused images"
+            docker image prune -a -f
+            
             echo "Pulling latest image..."
             docker login ghcr.io -u ${{ github.actor }} --password ${{ secrets.GH_TOKEN }}
             docker pull ghcr.io/${{ github.repository_owner }}/rekam-undangan-api:latest
-
+            
             echo "Starting new container..."
             docker compose up -d
