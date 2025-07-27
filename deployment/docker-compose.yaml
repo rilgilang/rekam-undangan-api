@@ -17,6 +17,7 @@ services:
       - aio_default
     volumes:
       - ./:/go/src/github.com/rilgilang/rekam-undangan-api/
+      - ./.env:/go/src/github.com/rilgilang/rekam-undangan-api/.env
     ports:
       - 8081:8081
     env_file:
