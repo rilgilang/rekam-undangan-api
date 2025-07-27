@@ -14,7 +14,7 @@ import (
 
 type VideoService interface {
 	GetAllVideo(ctx context.Context) *presenter.Response
-	ProcessVideo(ctx context.Context, url string) *presenter.Response
+	ProcessVideo(ctx context.Context, uniqueId, url string) *presenter.Response
 }
 
 type videoService struct {
@@ -47,16 +47,17 @@ func (s *videoService) GetAllVideo(ctx context.Context) *presenter.Response {
 	return response.WithCode(200).WithData(videos)
 }
 
-func (s *videoService) ProcessVideo(ctx context.Context, url string) *presenter.Response {
+func (s *videoService) ProcessVideo(ctx context.Context, uniqueId, url string) *presenter.Response {
 	var (
 		log      = logger.NewLog("process_video_service", s.cfg.LoggerEnable)
 		response = presenter.Response{}
 	)
 
 	payload := map[string]interface{}{
-		"id":      "",
-		"user_id": "",
-		"url":     url,
+		"id":        "",
+		"user_id":   "",
+		"url":       url,
+		"unique_id": uniqueId,
 	}
 
 	payloadBytes, err := json.Marshal(payload)

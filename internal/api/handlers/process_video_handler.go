@@ -45,7 +45,7 @@ func ProcessVideo(cfg *dotenv.Config, service service.VideoService) fiber.Handle
 			return c.JSON(presenter.ErrorResponse(err))
 		}
 
-		serv := service.ProcessVideo(ctx, payload.URL)
+		serv := service.ProcessVideo(ctx, payload.UniqueId, payload.URL)
 		if serv.Code != 200 {
 			c.Status(serv.Code)
 			return c.JSON(presenter.ErrorResponse(serv.Errors))

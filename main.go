@@ -31,7 +31,7 @@ func main() {
 		AllowOrigins: "*",
 		AllowMethods: "GET,POST",
 	}), limiter.New(limiter.Config{
-		Max:               10,
+		Max:               100,
 		Expiration:        30 * time.Second,
 		LimiterMiddleware: limiter.SlidingWindow{},
 	}))
