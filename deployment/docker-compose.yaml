@@ -7,7 +7,7 @@ services:
     hostname: rekam-undangan-api
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.rekam-undangan-api.rule=Host(`rilgilang.duckdns.org`)"
+      - "traefik.http.routers.rekam-undangan-api.rule=Host(`rilgilang.duckdns.org`) && PathPrefix(`/rekam-undangan-api`)"
       - "traefik.http.routers.rekam-undangan-api.entrypoints=websecure"
       - "traefik.http.routers.rekam-undangan-api.tls.certresolver=letsencrypt"
       - "traefik.http.services.rekam-undangan-api.loadbalancer.server.port=8081"
