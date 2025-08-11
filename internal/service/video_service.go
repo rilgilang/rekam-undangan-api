@@ -43,7 +43,6 @@ func (s *videoService) GetAllVideo(ctx context.Context) *presenter.Response {
 
 	videos, err := s.videoRepo.FetchAll(ctx)
 	if err != nil {
-		fmt.Println("error wir --> ", err)
 		log.Info(fmt.Sprintf(`error get processing the url: %s`, err))
 		return response.WithCode(500).WithError(errors.New("something went wrong!"))
 	}

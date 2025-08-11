@@ -32,7 +32,9 @@ func (r *videoRepository) FetchAll(ctx context.Context) ([]entities.Video, error
 		SELECT 
 		    id,
 		    user_id,
+		    unique_id,
 		    url,
+		    original_url,
 		    created_at,
 		    updated_at
     	From videos`).Rows()
@@ -49,7 +51,11 @@ func (r *videoRepository) FetchAll(ctx context.Context) ([]entities.Video, error
 		if err = rows.Scan(
 			&video.ID,
 			&video.UserID,
+			&video.UniqueId,
 			&video.URL,
+			&video.OriginalUrl,
+			&video.CreatedAt,
+			&video.UpdatedAt,
 		); err != nil {
 			return nil, err
 		}
