@@ -20,10 +20,12 @@ func NewRouter(app *fiber.App, cfg *dotenv.Config) *fiber.App {
 		panic(fmt.Sprintf(`db connection error got : %v`, err))
 	}
 
-	//minioClient, err := bootstrap.NewMinio(cfg)
+	minioClient, err := bootstrap.NewMinio(cfg)
 
 	// Redis client connect
 	cache := pkg.NewCache(bootstrap.NewCache(cfg))
+
+	storage := pkg.NewStorage(minioClient, cfg)
 
 	fmt.Println("Database connection success!")
 
@@ -41,7 +43,7 @@ func NewRouter(app *fiber.App, cfg *dotenv.Config) *fiber.App {
 
 	//service
 	var (
-		videoService = service.NewVideoService(videoRepo, cache, cfg)
+		videoService = service.NewVideoService(videoRepo, storage, cache, cfg)
 	)
 
 	//group

@@ -24,6 +24,7 @@ type Config struct {
 	MinioEndpoint        string `env:"MINIO_ENDPOINT"`
 	MinioAccessKey       string `env:"MINIO_ACCESS_KEY"`
 	MinioSecretAccessKey string `env:"MINIO_SECRET_ACCESS_KEY"`
+	MinioBucket          string `env:"MINIO_BUCKET"`
 	JWTKey               string `env:"JWT_KEY"`
 	JWTExpiredMin        int    `env:"JWT_EXPIRED_MINUTE"`
 	LoggerEnable         bool   `env:"LOGGER_ENABLE"`
@@ -70,6 +71,7 @@ func NewLoadConfig() (*Config, error) {
 			MinioEndpoint:        os.Getenv("MINIO_ENDPOINT"),
 			MinioAccessKey:       os.Getenv("MINIO_ACCESS_KEY"),
 			MinioSecretAccessKey: os.Getenv("MINIO_SECRET_ACCESS_KEY"),
+			MinioBucket:          os.Getenv("MINIO_BUCKET"),
 			JWTKey:               os.Getenv("JWT_EXPIRED_MINUTE"),
 			JWTExpiredMin:        jwtExpiredMinute,
 			LoggerEnable:         false,

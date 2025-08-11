@@ -12,6 +12,7 @@ import (
 type VideoRepository interface {
 	FetchAll(ctx context.Context) ([]entities.Video, error)
 	SaveProcessedVideoURL(ctx context.Context, videoUrl string) (*entities.Video, error)
+	FetchOneByUniqueId(ctx context.Context, uniqueId string) (*entities.Video, error)
 }
 
 type videoRepository struct {
@@ -56,6 +57,21 @@ func (r *videoRepository) FetchAll(ctx context.Context) ([]entities.Video, error
 	}
 
 	return videos, nil
+}
+
+func (r *videoRepository) FetchOneByUniqueId(ctx context.Context, uniqueId string) (*entities.Video, error) {
+	video := entities.Video{}
+
+	err := r.db.WithContext(ctx).First(&video, "unique_id = ?", uniqueId).Error
+
+	if err != nil {
+		if err.Error() == consts.SqlNoRow {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return &video, nil
 }
 
 func (r *videoRepository) SaveProcessedVideoURL(ctx context.Context, videoUrl string) (*entities.Video, error) {

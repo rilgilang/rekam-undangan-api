@@ -15,7 +15,7 @@ func NewMinio(config *dotenv.Config) (*minio.Client, error) {
 	// Initialize minio client object.
 	minioClient, err := minio.New(endpoint, &minio.Options{
 		Creds:  credentials.NewStaticV4(accessKey, secretAccessKey, ""),
-		Secure: true,
+		Secure: false,
 	})
 
 	if err != nil {

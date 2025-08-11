@@ -29,6 +29,28 @@ func GetAllProcessedVideo(cfg *dotenv.Config, service service.VideoService) fibe
 	}
 }
 
+func DownloadVideo(cfg *dotenv.Config, service service.VideoService) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+
+		var (
+			ctx = c.Context()
+		)
+
+		uniqueId := c.Params("unique_id")
+
+		serv := service.DownloadVideo(ctx, uniqueId)
+		if serv.Code != 200 {
+			c.Status(serv.Code)
+			return c.JSON(presenter.ErrorResponse(serv.Errors))
+		}
+
+		c.Status(200)
+		c.Set("Content-Disposition", "attachment; filename="+serv.StreamFileName)
+		c.Set("Content-Type", serv.StreamContentType) // Generic binary data
+		return c.SendStream(serv.Stream)
+	}
+}
+
 func ProcessVideo(cfg *dotenv.Config, service service.VideoService) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 
