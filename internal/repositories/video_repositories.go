@@ -28,38 +28,10 @@ func NewVideoRepo(db *gorm.DB) VideoRepository {
 func (r *videoRepository) FetchAll(ctx context.Context) ([]entities.Video, error) {
 	videos := []entities.Video{}
 
-	rows, err := r.db.WithContext(ctx).Raw(`
-		SELECT 
-		    id,
-		    user_id,
-		    unique_id,
-		    url,
-		    original_url,
-		    created_at,
-		    updated_at
-    	From videos`).Rows()
+	err := r.db.WithContext(ctx).Find(&videos).Error
 
 	if err != nil {
-		if err.Error() == consts.SqlNoRow {
-			return nil, nil
-		}
 		return nil, err
-	}
-
-	for rows.Next() {
-		video := entities.Video{}
-		if err = rows.Scan(
-			&video.ID,
-			&video.UserID,
-			&video.UniqueId,
-			&video.URL,
-			&video.OriginalUrl,
-			&video.CreatedAt,
-			&video.UpdatedAt,
-		); err != nil {
-			return nil, err
-		}
-		videos = append(videos, video)
 	}
 
 	return videos, nil
