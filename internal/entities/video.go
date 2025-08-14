@@ -16,7 +16,7 @@ type Video struct {
 	UniqueId    string    `gorm:"type:varchar(255);unique" json:"unique_id"`
 	OriginalUrl string    `gorm:"type:text" json:"original_url"`
 	URL         string    `gorm:"type:text" json:"url"`
-	Status      string    `gorm:"type:text" json:"status"`
+	Status      string    `gorm:"type:varchar(36)" json:"status"`
 	UserID      string    `gorm:"type:varchar(36)" json:"user_id"`
 	UpdatedAt   time.Time `gorm:"not null" json:"updated_at," sql:"DEFAULT:CURRENT_TIMESTAMP"`
 	CreatedAt   time.Time `gorm:"not null" json:"created_at," sql:"DEFAULT:CURRENT_TIMESTAMP"`
